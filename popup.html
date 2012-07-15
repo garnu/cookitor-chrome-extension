@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Cookitor</title>
+    <style>
+      body {
+        min-width: 350px;
+        overflow-x: hidden;
+        font-family: arial;
+        color: #202020;
+        margin: 15px;
+      }
+      h2{
+        margin-top: 0px;
+        margin-bottom: 8px;
+      }
+      h3 {
+        margin-top: 4px;
+        margin-bottom: 2px;
+      }
+      label, textarea, input {
+        display: block;
+      }
+      textarea, input {
+        margin-bottom: 5px;
+      }
+      #flasher{
+        border: 1px solid #A0A0A0;
+        background-color: #E0E0E0;
+        padding: 4px;
+        display: none;
+        margin-bottom: 10px;
+      }
+      #content {
+        min-width: 330px;
+        min-height: 50px;
+      }
+      #session-list a {
+        cursor: pointer;
+        border-bottom: 1px solid;
+      }
+      #session {
+      }
+      #session-name {
+        text-align: center;
+      }
+      .block {
+        border: 1px solid #A0A0A0;
+        background-color: #E0E0E0;
+        padding: 4px;
+        display: block;
+        overflow: auto;
+      }
+      .highlight .line {
+        margin-left: 12px;
+        margin-right: 10px;
+      }
+      .highlight .curly-bracket, .highlight .arrow {
+        font-weight: bold;
+      }
+      .highlight .key {
+        color: red;
+      }
+      .highlight .value {
+        color: blue;
+      }
+      #toolbar {
+        float: right;
+        font-size: 10px;
+        margin-right: 10px;
+      }
+      #toolbar a {
+        cursor: pointer;
+      }
+      #toolbar .selected {
+        font-weight: bold;
+      }
+      #data {
+        margin-bottom: 18px;
+      }
+      #hmac-value {
+        text-align: center;
+      }
+      #response.error {
+        border: 5px dashed #ff6600;
+        color: #FF3333;
+        background-color: #ff9900;
+        padding: 10px;
+        display: block;
+        text-align: center;
+      }
+    </style>
+    <script src="jquery.min.js"></script>
+    <script src="popup.js"></script>
+  </head>
+  <body>
+    <div id="flasher"></div>
+    <div id="session-list"></div>
+    <div id="session">
+      <img id="logo" src="logo.png" />
+      <h2 id="session-name"></h2>
+      <form accept-charset="UTF-8" action="http://cookitor.herokuapp.com/decode" id="processing-form" method="post">
+        <label for="content">Encoded cookie content:</label>
+        <textarea id="content" name="content"></textarea>
+        <input name="commit" class="decode" type="submit" value="Decode" />
+      </form>
+      <div id="response"></div>
+    </div>
+  </body>
+</html>
