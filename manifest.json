@@ -1,6 +1,6 @@
 {
   "name": "Cookitor",
-  "version": "0.2",
+  "version": "0.5",
   "manifest_version": 2,
   "description": "Chrome extension to decode Ruby on Rails session cookies.",
   "browser_action": {

@@ -1,22 +1,32 @@
 var cookies;
 
-function loadSession(name, content){
+function loadSession(name, content, domain, key){
   $('#session-name').html(name);
+  $('#session-domain').html(domain);
   $('#content').html(content);
+  $('#key_value').val(key);
+  $('#response').removeClass('error');
+  $('#response').html('');
+  var data = {
+    'content': content,
+    'no_layout': 1,
+    'mode': 'auto',
+    'version': chrome.app.getDetails().version,
+    'name': 'Cookitor 5 Chrome'
+  }
+  if(key) {
+    data.key_value = key;
+    var keyName = storageKey(name, domain);
+    localStorage.setItem(keyName, key);
+  }
   $.ajax({
     type: 'POST',
     url: $('#processing-form').attr('action'),
-    data: {
-      'content': content,
-      'no_layout': 1,
-      'mode': 'auto',
-      'version': chrome.app.getDetails().version,
-      'name': 'Cookitor 4 Chrome'
-    },
+    data: data,
     success: function(data) {
+      $('#response').removeClass('error');
       $('#response').html(data);
       initializeToolbar();
-      $('#response').removeClass('error');
     },
     error: function(jqXHR, textStatus, errorThrown) {
       var error = "An error occured. Please retry later.";
@@ -47,7 +57,7 @@ function multipleSessions(){
     var name = $(this).html();
     $.each(cookies, function(index, cookie){
       if(name == cookie.name){
-        loadSession(cookie.name, cookie.value);
+        loadSession(cookie.name, cookie.value, cookie.domain, localStorage.getItem(storageKey(cookie.name, cookie.domain)));
       }
     });
   });
@@ -59,14 +69,18 @@ function initializeToolbar(){
     $('#raw').hide();
     $('#raw-button').removeClass('selected');
     $('#highlight-button').addClass('selected');
-    $('#highlighted').show();
+    $('#highlighted').fadeIn();
   });
   $('#raw-button').click(function() {
     $('#highlighted').hide();
     $('#highlight-button').removeClass('selected');
     $('#raw-button').addClass('selected');
-    $('#raw').show();
+    $('#raw').fadeIn();
   });
+}
+
+function storageKey(name, domain) {
+  return 'key-'+name+'-'+domain;
 }
 
 chrome.extension.sendRequest({command: 'fetch'}, function(response){
@@ -79,7 +93,9 @@ chrome.extension.sendRequest({command: 'fetch'}, function(response){
     default:
       multipleSessions();
     case 1:
-      loadSession(cookies[0].name, cookies[0].value);
+      if($('#key_value').val().length)
+        localStorage.setItem('key-'+cookies[0].domain, $('#key_value').val());
+      loadSession(cookies[0].name, cookies[0].value, cookies[0].domain, localStorage.getItem(storageKey(cookies[0].name, cookies[0].domain)));
     }
   } else {
     flasher("An error occured while reading the session cookies.");
@@ -88,8 +104,12 @@ chrome.extension.sendRequest({command: 'fetch'}, function(response){
 
 $(document).ready(function() {
   initializeToolbar();
+  $('#content').on('change', function(){
+    $('#session-name').html("Custom");
+    $('#session-domain').html('unknown');
+  });
   $('#processing-form .decode').click(function(e) {
-    loadSession("Custom", $('#content').val());
+    loadSession($('#session-name').html(), $('#content').val(), $('#session-domain').html(), $('#key_value').val());
     e.preventDefault();
   });
 });

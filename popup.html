@@ -35,6 +35,12 @@
         min-width: 330px;
         min-height: 50px;
       }
+      #key_value {
+        min-width: 330px;
+      }
+      #key-label {
+        text-decoration: underline;
+      }
       #session-list a {
         cursor: pointer;
         border-bottom: 1px solid;
@@ -43,6 +49,12 @@
       }
       #session-name {
         text-align: center;
+      }
+      #session-domain {
+        font-weight: bold;
+      }
+      #processing-form {
+        margin-top: 10px;
       }
       .block {
         border: 1px solid #A0A0A0;
@@ -99,9 +111,12 @@
     <div id="session">
       <img id="logo" src="logo.png" />
       <h2 id="session-name"></h2>
-      <form accept-charset="UTF-8" action="http://cookitor.herokuapp.com/decode" id="processing-form" method="post">
+      Domain: <span id="session-domain"></span>
+      <form accept-charset="UTF-8" action="https://cookitor.herokuapp.com/decode" id="processing-form" method="post">
         <label for="content">Encoded cookie content:</label>
         <textarea id="content" name="content"></textarea>
+        <label for="key_value" id="key-label" title="From Rails 4, session cookies are encrypted by default with a secret key. Enter your application key here if the cookie is encrypted.">Secret key base:</label>
+        <input id="key_value" name="key_value" type="text" value="" />
         <input name="commit" class="decode" type="submit" value="Decode" />
       </form>
       <div id="response"></div>
